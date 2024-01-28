@@ -6,7 +6,7 @@ services:
     image: bitnami/postgresql:${POSTGRES_VERSION}
     container_name: postgres
     volumes:
-      - pg-data:/bitnami/postgresql
+      - pg-vol:/bitnami/postgresql
     networks:
       - openreplay-net
     environment:
@@ -16,7 +16,7 @@ services:
     image: bitnami/redis:${REDIS_VERSION}
     container_name: redis
     volumes:
-      - redisdata:/bitnami/redis/data
+      - redis-vol:/bitnami/redis/data
     networks:
       - openreplay-net
     environment:
@@ -26,7 +26,7 @@ services:
     image: bitnami/minio:${MINIO_VERSION}
     container_name: minio
     volumes:
-      - miniodata:/data
+      - minio-vol:/data
     networks:
       - openreplay-net
     ports:
@@ -41,9 +41,9 @@ services:
     profiles:
       - "migration"
     volumes:
-      - shared-volume:/mnt/efs
-      - miniodata:/mnt/minio
-      - pg-data:/mnt/postgres
+      - shared-vol:/mnt/efs
+      - minio-vol:/mnt/minio
+      - pg-vol:/mnt/postgres
     entrypoint:
       - /bin/bash
       - -c
@@ -95,7 +95,7 @@ services:
     environment:
       PGHOST: postgresql
       PGPORT: 5432
-      pg-dataBASE: postgres
+      pg-volBASE: postgres
       PGUSER: postgres
       PGPASSWORD: ${COMMON_PG_PASSWORD}
     entrypoint:
@@ -231,7 +231,7 @@ services:
     image: public.ecr.aws/p1t3u8a3/chalice:${COMMON_VERSION}
     container_name: chalice
     volumes:
-      - shared-volume:/mnt/efs
+      - shared-vol:/mnt/efs
     networks:
       - openreplay-net
     env_file:
@@ -242,7 +242,7 @@ services:
     image: public.ecr.aws/p1t3u8a3/sink:${COMMON_VERSION}
     container_name: sink
     volumes:
-      - shared-volume:/mnt/efs
+      - shared-vol:/mnt/efs
     networks:
       - openreplay-net
     env_file:
@@ -253,7 +253,7 @@ services:
     image: public.ecr.aws/p1t3u8a3/storage:${COMMON_VERSION}
     container_name: storage
     volumes:
-      - shared-volume:/mnt/efs
+      - shared-vol:/mnt/efs
     networks:
       - openreplay-net
     env_file:
@@ -274,10 +274,10 @@ services:
     restart: unless-stopped
 
 volumes:
-  pg-data:
-  redisdata:
-  miniodata:
-  shared-volume:
+  pg-vol:
+  redis-vol:
+  minio-vol:
+  shared-vol:
 
 networks:
   openreplay-net:
