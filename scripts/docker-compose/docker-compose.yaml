@@ -273,11 +273,30 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     restart: unless-stopped
 
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    ports:
+      - "888:80"
+      - "444:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - openreplay-net
+    environment:
+      - ACME_AGREE=true # Agree to Let's Encrypt Subscriber Agreement
+      - CADDY_DOMAIN=${CADDY_DOMAIN}
+    restart: unless-stopped
+
 volumes:
   pgdata:
   redisdata:
   miniodata:
   shared-volume:
+  caddy_data:
+  caddy_config:
 
 networks:
   openreplay-net:
