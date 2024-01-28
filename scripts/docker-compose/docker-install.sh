@@ -24,11 +24,11 @@ if ! command -v git &>/dev/null; then
 fi
 
 # Clone the repository
-if git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$CLONE_DIR"; then
-    info "Repository cloned successfully."
-else
-	error "Failed to clone the repository."
-fi
+# if git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$CLONE_DIR"; then
+#     info "Repository cloned successfully."
+# else
+# 	error "Failed to clone the repository."
+# fi
 
 # Navigate into the repository directory
 cd "$CLONE_DIR/scripts/docker-compose" || error "The directory $CLONE_DIR does not exist."

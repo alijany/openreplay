@@ -55,11 +55,11 @@ info "Grabbing latest apt caches"
 sudo apt update
 
 # setup docker
-info "Setting up Docker"
-sudo apt install docker.io docker-compose -y
+# info "Setting up Docker"
+# sudo apt install docker.io docker-compose -y
 
 # enable docker without sudo
-sudo usermod -aG docker "${USER}" || true
+# sudo usermod -aG docker "${USER}" || true
 
 # Prompt for DOMAIN_NAME input
 echo -e "${GREEN}Please provide your domain name.${NC}"
