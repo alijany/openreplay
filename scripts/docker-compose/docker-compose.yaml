@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   postgresql:
@@ -28,8 +28,8 @@ services:
       - miniodata:/data
     networks:
       - openreplay-net
-    # ports:
-    #   - 9001:9001
+    ports:
+      - 9005:9001
     environment:
       MINIO_ROOT_USER: ${COMMON_S3_KEY}
       MINIO_ROOT_PASSWORD: ${COMMON_S3_SECRET}
@@ -71,16 +71,16 @@ services:
       - /bin/bash
       - -c
       - |
-          apt update && apt install netcat -y
-          # Wait for Minio to be ready
-          until nc -z -v -w30 minio 9000; do
-              echo "Waiting for Minio server to be ready..."
-              sleep 1
-          done
-          bash /tmp/minio.sh init || exit 100
+        apt update && apt install netcat -y
+        # Wait for Minio to be ready
+        until nc -z -v -w30 minio 9000; do
+            echo "Waiting for Minio server to be ready..."
+            sleep 1
+        done
+        bash /tmp/minio.sh init || exit 100
 
   db-migration:
-    image: bitnami/postgresql:14.5.0 
+    image: bitnami/postgresql:14.5.0
     container_name: db-migration
     profiles:
       - "migration"
@@ -101,12 +101,12 @@ services:
       - /bin/bash
       - -c
       - |
-          until PGPASSWORD=${COMMON_PG_PASSWORD} psql -h postgresql -U postgres -d postgres -c '\q'; do
-          echo "PostgreSQL is unavailable - sleeping"
-          sleep 1
-          done
-          echo "PostgreSQL is up - executing command"
-          psql -v ON_ERROR_STOP=1 -f /tmp/init_schema.sql
+        until PGPASSWORD=${COMMON_PG_PASSWORD} psql -h postgresql -U postgres -d postgres -c '\q'; do
+        echo "PostgreSQL is unavailable - sleeping"
+        sleep 1
+        done
+        echo "PostgreSQL is up - executing command"
+        psql -v ON_ERROR_STOP=1 -f /tmp/init_schema.sql
 
   frontend-openreplay:
     image: public.ecr.aws/p1t3u8a3/frontend:${COMMON_VERSION}
@@ -262,6 +262,8 @@ services:
   nginx-openreplay:
     image: nginx:latest
     container_name: nginx
+    depends_on:
+      - http-openreplay
     ports:
       - 88:80
     networks:
