@@ -1,10 +1,10 @@
 #!/bin/bash
 
-REPO_URL="https://github.com/openreplay/openreplay"
+REPO_URL="https://github.com/alijany/openreplay"
 
-# Ask for the branch to clone (default is master/main)
-read -rp "Enter the version to clone (default is 'main'): " REPO_BRANCH
-REPO_BRANCH=${REPO_BRANCH:-main}
+# Ask for the branch to clone (default is master/dev)
+read -rp "Enter the version to clone (default is 'dev'): " REPO_BRANCH
+REPO_BRANCH=${REPO_BRANCH:-dev}
 
 # Directory in which to clone the repository
 CLONE_DIR="openreplay"
@@ -23,12 +23,12 @@ if ! command -v git &>/dev/null; then
 	error "Git is not installed. Please install Git and run this script again."
 fi
 
-# Clone the repository
-# if git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$CLONE_DIR"; then
-#     info "Repository cloned successfully."
-# else
-# 	error "Failed to clone the repository."
-# fi
+Clone the repository
+if git clone --depth 1 --branch "$REPO_BRANCH" "$REPO_URL" "$CLONE_DIR"; then
+    info "Repository cloned successfully."
+else
+	error "Failed to clone the repository."
+fi
 
 # Navigate into the repository directory
 cd "$CLONE_DIR/scripts/docker-compose" || error "The directory $CLONE_DIR does not exist."
